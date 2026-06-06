@@ -7,7 +7,7 @@ public abstract class MapperBase<TModel, TEntity> : IMapper<TModel, TEntity>
     where TModel : ModelBase, new()
     where TEntity : EntityBase<TEntity>, new()
 {
-    public TEntity MapToEntity(TModel model) =>
+    public virtual TEntity MapToEntity(TModel model) =>
         new()
         {
             Id = model.Id,
@@ -15,7 +15,7 @@ public abstract class MapperBase<TModel, TEntity> : IMapper<TModel, TEntity>
             UpdatedAt = model.UpdatedAt,
         };
 
-    public TModel MapFrom(TEntity entity) =>
+    public virtual TModel MapFrom(TEntity entity) =>
         new()
         {
             Id = entity.Id,

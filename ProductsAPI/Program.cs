@@ -1,4 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using ProductsAPI.Core.Infrastructure.Domain.Mappers;
+using ProductsAPI.Modules.Products.Db.Entities;
+using ProductsAPI.Modules.Products.Db.Repos;
+using ProductsAPI.Modules.Products.Domain.Mappers;
+using ProductsAPI.Modules.Products.Domain.Models;
 using ProductsAPI.Modules.Products.Services;
 using ProductsAPI.Modules.Shared.Db;
 
@@ -22,7 +27,24 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddScoped<IProductService, ProductService>();
+        #region Services
+
+        builder.Services.AddScoped<IProductsService, ProductsService>();
+
+        #endregion
+
+        #region Repos
+
+        builder.Services.AddScoped<IProductRepo, ProductRepo>();
+
+        #endregion
+
+        #region Mappers
+
+        builder.Services.AddSingleton<IMapper<ProductModel, ProductEntity>, ProductMapper>();
+
+        #endregion
+
 
         var app = builder.Build();
 

@@ -7,14 +7,16 @@ namespace ProductsAPI.Modules.Products;
 [ApiController]
 [Route("api/product")]
 public sealed class ProductController(
-    IProductService productService
+    IProductsService productsService
 ) : ControllerBase
 {
     [HttpGet]
     [Route("{id:guid}")]
-    public async Task<ActionResult<GetProductResponse>> GetProduct([FromRoute] Guid id)
+    public async Task<ActionResult<GetProductResponse?>> GetProduct([FromRoute] Guid id)
     {
-        var product = await productService.GetProduct(id);
-        return Ok(GetProductResponse.CreateFrom(product));
+        var product = await productsService.GetProduct(id);
+        return product == null
+            ? NotFound()
+            : Ok(GetProductResponse.CreateFrom(product));
     }
 }
