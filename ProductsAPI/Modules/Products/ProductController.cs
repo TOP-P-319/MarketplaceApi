@@ -11,8 +11,8 @@ public sealed class ProductController(
 ) : ControllerBase
 {
     [HttpGet]
-    [Route("{id:int}")]
-    public async Task<ActionResult<GetProductResponse>> GetProduct([FromRoute] int id)
+    [Route("{id:guid}")]
+    public async Task<ActionResult<GetProductResponse>> GetProduct([FromRoute] Guid id)
     {
         var product = await productService.GetProduct(id);
         return Ok(GetProductResponse.CreateFrom(product));

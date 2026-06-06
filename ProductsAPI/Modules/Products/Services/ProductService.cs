@@ -4,7 +4,7 @@ namespace ProductsAPI.Modules.Products.Services;
 
 public sealed class ProductService : IProductService
 {
-    public async Task<ProductModel> GetProduct(int id)
+    public async Task<ProductModel> GetProduct(Guid id)
     {
         return new ProductModel
         {

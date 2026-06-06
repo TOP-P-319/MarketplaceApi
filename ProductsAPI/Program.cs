@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using ProductsAPI.Modules.Products.Services;
+using ProductsAPI.Modules.Shared.Db;
 
 namespace ProductsAPI;
 
@@ -9,6 +11,8 @@ public static class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
+        builder.Services.AddDbContext<ProductsDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("ProductsDB")));
 
         // Add services to the container.
         builder.Services.AddAuthorization();

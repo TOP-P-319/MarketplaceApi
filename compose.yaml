@@ -1,7 +1,31 @@
-﻿services:
-  productsapi:
-    image: productsapi
+﻿name: marketplace-api-319
+services:
+  products-api:
+    image: products-api-319
     build:
       context: .
       dockerfile: ProductsAPI/Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__PostgresDB: Host=products-db;Port=5432;Database=${PRODUCTS_DB};Username=${PRODUCTS_DB_USER};Password=${PRODUCTS_DB_PASSWORD}
+    ports:
+      - "5032:8080"
+    depends_on:
+      - products-db
+    restart: always
 
+  products-db:
+    image: postgres:18.4-alpine3.23
+    environment:
+      POSTGRES_DB: ${PRODUCTS_DB}
+      POSTGRES_USER: ${PRODUCTS_DB_USER}
+      POSTGRES_PASSWORD: ${PRODUCTS_DB_PASSWORD}     
+    ports:
+      - "${PRODUCTS_DB_PORT}:5432"
+    volumes:
+      - products-db-data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  products-db-data:
