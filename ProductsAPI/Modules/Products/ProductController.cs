@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductsAPI.Modules.Products.Dtos.Requests;
 using ProductsAPI.Modules.Products.Dtos.Responses;
 using ProductsAPI.Modules.Products.Services;
 
@@ -12,11 +13,19 @@ public sealed class ProductController(
 {
     [HttpGet]
     [Route("{id:guid}")]
-    public async Task<ActionResult<GetProductResponse?>> GetProduct([FromRoute] Guid id)
+    public async Task<ActionResult<GetProductResponse?>> GetProductAsync([FromRoute] Guid id)
     {
-        var product = await productsService.GetProduct(id);
+        var product = await productsService.GetProductAsync(id);
         return product == null
             ? NotFound()
             : Ok(GetProductResponse.CreateFrom(product));
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> AddProductAsync([FromBody] AddProductRequest request)
+    {
+        var product = request.ToProductModel();
+        await productsService.AddProductAsync(product);
+        return Ok();
     }
 }

@@ -11,7 +11,7 @@ public sealed class ProductsController(IProductsService productsService) : Contr
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GetProductResponse>>> GetAllProducts()
     {
-        var products = await productsService.GetAllProducts();
+        var products = await productsService.GetAllProductsAsync();
         return Ok(products.Select(GetProductResponse.CreateFrom));
     }
 }

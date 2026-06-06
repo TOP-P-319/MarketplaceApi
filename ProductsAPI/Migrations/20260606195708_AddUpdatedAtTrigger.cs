@@ -11,15 +11,15 @@ namespace ProductsAPI.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateUpdatedAtFunction();
-            migrationBuilder.AddUpdatedAtTriggerToTable("products");
+            migrationBuilder.FunctionMigrations.UpdatedAt.Add();
+            migrationBuilder.TriggerMigrations.UpdatedAt.AddToTable("products");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RemoveUpdatedAtFunction();
-            migrationBuilder.RemoveUpdatedAtTriggerFromTable("products");
+            migrationBuilder.FunctionMigrations.UpdatedAt.Remove();
+            migrationBuilder.TriggerMigrations.UpdatedAt.RemoveFromTable("products");
         }
     }
 }
