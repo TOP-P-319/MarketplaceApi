@@ -8,13 +8,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.1" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Modules\Test\Db\Entities\" />
+      <Folder Include="Modules\Test\Db\Mappers\" />
+      <Folder Include="Modules\Test\Db\Repos\" />
+      <Folder Include="Modules\Test\Domain\Models\" />
+      <Folder Include="Modules\Test\UseCases\" />
     </ItemGroup>
 
 </Project>
