@@ -1,21 +1,15 @@
 ﻿using ProductsAPI.Core.Infrastructure.Db.Entities;
 using ProductsAPI.Core.Infrastructure.Domain.Models;
 
-namespace ProductsAPI.Core.Infrastructure.Domain.Mappers;
+namespace ProductsAPI.Core.Infrastructure.Db.Mappers;
 
 public abstract class MapperBase<TModel, TEntity> : IMapper<TModel, TEntity>
     where TModel : ModelBase, new()
     where TEntity : EntityBase<TEntity>, new()
 {
-    public virtual TEntity MapToEntity(TModel model) =>
-        new()
-        {
-            Id = model.Id,
-            CreatedAt = model.CreatedAt,
-            UpdatedAt = model.UpdatedAt,
-        };
+    public abstract TEntity MapToEntity(TModel model);
 
-    public virtual TModel MapFrom(TEntity entity) =>
+    public virtual TModel MapToModel(TEntity entity) =>
         new()
         {
             Id = entity.Id,

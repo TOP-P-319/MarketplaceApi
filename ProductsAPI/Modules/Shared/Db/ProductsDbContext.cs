@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProductsAPI.Core;
 using ProductsAPI.Core.Utils.Db;
 using ProductsAPI.Modules.Products.Db.Entities;
 
@@ -19,7 +20,7 @@ public sealed class ProductsDbContext(DbContextOptions<ProductsDbContext> option
 
             entity.Property(e => e.Name)
                 .HasColumnName("name")
-                .HasMaxLength(63)
+                .HasMaxLength(Limits.Product.Name.MaxLength)
                 .IsRequired();
         });
     }

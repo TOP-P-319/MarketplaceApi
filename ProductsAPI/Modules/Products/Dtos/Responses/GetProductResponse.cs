@@ -3,14 +3,19 @@ using ProductsAPI.Modules.Products.Domain.Models;
 
 namespace ProductsAPI.Modules.Products.Dtos.Responses;
 
-public sealed class GetProductResponse
+public sealed record GetProductResponse
 {
-    [Required] public Guid Id { get; private init; }
-    [Required] public string Name { get; private init; } = string.Empty;
+    [Required] public required Guid Id { get; init; }
+    [Required] public required string Name { get; init; }
+    [Required] public required DateTime CreatedAt { get; init; }
+    [Required] public required DateTime UpdatedAt { get; init; }
 
-    public static GetProductResponse CreateFrom(ProductModel product) => new()
-    {
-        Id = product.Id,
-        Name = product.Name
-    };
+    public static GetProductResponse CreateFrom(ProductModel product) =>
+        new()
+        {
+            Id = product.Id,
+            Name = product.Name,
+            CreatedAt = product.CreatedAt,
+            UpdatedAt = product.UpdatedAt,
+        };
 }

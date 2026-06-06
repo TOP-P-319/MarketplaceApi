@@ -5,6 +5,7 @@ namespace ProductsAPI.Modules.Products.Services;
 
 public sealed class ProductsService(IProductRepo productRepo) : IProductsService
 {
-    public async Task<ProductModel?> GetProduct(Guid id) => await productRepo.FindByIdAsync(id);
-    public async Task<IEnumerable<ProductModel>> GetAllProducts() => await productRepo.FindAllAsync();
+    public async Task<ProductModel?> GetProductAsync(Guid id) => await productRepo.FindByIdAsync(id);
+    public async Task<IEnumerable<ProductModel>> GetAllProductsAsync() => await productRepo.FindAllAsync();
+    public async Task AddProductAsync(ProductModel product) =>  await productRepo.AddAsync(product);
 }
