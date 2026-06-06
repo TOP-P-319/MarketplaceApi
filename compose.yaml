@@ -24,7 +24,7 @@ services:
     ports:
       - "${PRODUCTS_DB_PORT}:5432"
     volumes:
-      - products-db-data:/var/lib/postgresql/data
+      - products-db-data:/var/lib/postgresql
     restart: always
 
 volumes:

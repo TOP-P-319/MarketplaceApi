@@ -5,35 +5,48 @@ namespace ProductsAPI.Core.Utils.Db;
 public static class MigrationBuilderEx
 {
     private const string SetUpdatedAtFuncName = "set_updated_at";
-    
-    public static void CreateUpdatedAtFunction(
-        this MigrationBuilder migrationBuilder
-        )
-    {
-        migrationBuilder.Sql(
-            $"""
-            CREATE OR REPLACE FUNCTION {SetUpdatedAtFuncName}()
-            RETURNS TRIGGER AS $$
-            BEGIN 
-                NEW.updated_at = NOW();
-                RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-            """
-        );
-    }
 
-    public static void AddUpdatedTrigger(
-        this MigrationBuilder migrationBuilder,
-        string tableName)
+    extension(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.Sql(
-            $"""
-             CREATE TRIGGER {tableName}_updated
-             BEFORE UPDATE ON {tableName}
-             FOR EACH ROW
-             EXECUTE FUNCTION {SetUpdatedAtFuncName}();
-             """
-        );
+        public void CreateUpdatedAtFunction()
+        {
+            migrationBuilder.Sql(
+                $"""
+                 CREATE OR REPLACE FUNCTION {SetUpdatedAtFuncName}()
+                 RETURNS TRIGGER AS $$
+                 BEGIN 
+                     NEW.updated_at = NOW();
+                     RETURN NEW;
+                 END;
+                 $$ LANGUAGE plpgsql;
+                 """
+            );
+        }
+
+        public void RemoveUpdatedAtFunction()
+        {
+            migrationBuilder.Sql(
+                $"DROP FUNCTION IF EXISTS {SetUpdatedAtFuncName}();"
+            );
+        }
+
+        public void AddUpdatedAtTriggerToTable(string tableName)
+        {
+            migrationBuilder.Sql(
+                $"""
+                 CREATE TRIGGER {tableName}_updated
+                 BEFORE UPDATE ON {tableName}
+                 FOR EACH ROW
+                 EXECUTE FUNCTION {SetUpdatedAtFuncName}();
+                 """
+            );
+        }
+
+        public void RemoveUpdatedAtTriggerFromTable(string tableName)
+        {
+            migrationBuilder.Sql(
+                $"DROP TRIGGER IF EXISTS {tableName}_updated ON {tableName};"
+            );
+        }
     }
 }
