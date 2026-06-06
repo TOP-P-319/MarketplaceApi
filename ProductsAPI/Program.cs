@@ -1,3 +1,5 @@
+using ProductsAPI.Modules.Products.Services;
+
 namespace ProductsAPI;
 
 public static class Program
@@ -7,7 +9,7 @@ public static class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
-        
+
         // Add services to the container.
         builder.Services.AddAuthorization();
 
@@ -15,6 +17,8 @@ public static class Program
         builder.Services.AddOpenApi();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddScoped<IProductService, ProductService>();
 
         var app = builder.Build();
 
@@ -29,7 +33,7 @@ public static class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-        
+
         app.MapControllers();
 
         await app.RunAsync();

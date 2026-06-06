@@ -19,11 +19,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Modules\Test\Db\Entities\" />
-      <Folder Include="Modules\Test\Db\Mappers\" />
-      <Folder Include="Modules\Test\Db\Repos\" />
-      <Folder Include="Modules\Test\Domain\Models\" />
-      <Folder Include="Modules\Test\UseCases\" />
+      <Folder Include="Core\Infrastructure\Db\Mappers\" />
+      <Folder Include="Core\Infrastructure\Db\Repos\" />
+      <Folder Include="Modules\Products\Db\Entities\" />
+      <Folder Include="Modules\Products\Db\Mappers\" />
+      <Folder Include="Modules\Products\Dtos\Requests\" />
     </ItemGroup>
 
 </Project>
