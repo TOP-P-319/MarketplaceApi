@@ -5,7 +5,7 @@ namespace ProductsAPI.Modules.Products.Dtos.Responses;
 
 public sealed class GetProductResponse
 {
-    [Required] public int Id { get; private init; }
+    [Required] public Guid Id { get; private init; }
     [Required] public string Name { get; private init; } = string.Empty;
 
     public static GetProductResponse CreateFrom(ProductModel product) => new()

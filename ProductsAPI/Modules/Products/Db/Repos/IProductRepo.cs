@@ -1,3 +1,6 @@
-﻿namespace ProductsAPI.Modules.Products.Db.Repos;
+﻿using ProductsAPI.Core.Infrastructure.Db.Repos;
+using ProductsAPI.Modules.Products.Domain.Models;
 
-public interface IProductRepo;
+namespace ProductsAPI.Modules.Products.Db.Repos;
+
+public interface IProductRepo : IRepo<ProductModel>;
