@@ -8,7 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.1" />
     </ItemGroup>
 
@@ -16,14 +23,6 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Core\Infrastructure\Db\Mappers\" />
-      <Folder Include="Core\Infrastructure\Db\Repos\" />
-      <Folder Include="Modules\Products\Db\Entities\" />
-      <Folder Include="Modules\Products\Db\Mappers\" />
-      <Folder Include="Modules\Products\Dtos\Requests\" />
     </ItemGroup>
 
 </Project>
