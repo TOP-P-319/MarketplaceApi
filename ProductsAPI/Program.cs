@@ -1,3 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using ProductsAPI.Core.Infrastructure.Db.Mappers;
+using ProductsAPI.Modules.App.Db;
+using ProductsAPI.Modules.Products.Db.Entities;
+using ProductsAPI.Modules.Products.Db.Mappers;
+using ProductsAPI.Modules.Products.Db.Repos;
+using ProductsAPI.Modules.Products.Domain.Models;
 using ProductsAPI.Modules.Products.Services;
 
 namespace ProductsAPI;
@@ -8,17 +15,41 @@ public static class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        #region Services
+
         builder.Services.AddControllers();
-
-        // Add services to the container.
         builder.Services.AddAuthorization();
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("ProductsDB"))
+        );
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+        #endregion
+
+        #region API Docs
+
         builder.Services.AddOpenApi();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddScoped<IProductService, ProductService>();
+        #endregion
+
+        #region Services DI
+
+        builder.Services.AddScoped<IProductsService, ProductsService>();
+
+        #endregion
+
+        #region Repositories DI
+
+        builder.Services.AddScoped<IProductsRepo, ProductsRepo>();
+
+        #endregion
+
+        #region Mappers DI
+
+        builder.Services.AddSingleton<IMapper<ProductModel, ProductEntity>, ProductMapper>();
+
+        #endregion
 
         var app = builder.Build();
 

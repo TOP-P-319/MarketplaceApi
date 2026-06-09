@@ -2,7 +2,7 @@
 
 namespace ProductsAPI.Modules.Products.Services;
 
-public interface IProductService
+public interface IProductsService
 {
-    Task<ProductModel> GetProduct(int id);
+    Task<ProductModel?> GetProduct(Guid id);
 }
