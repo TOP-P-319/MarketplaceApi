@@ -3,10 +3,10 @@ using ProductsAPI.Modules.Products.Domain.Models;
 
 namespace ProductsAPI.Modules.Products.Dtos.Responses;
 
-public sealed class GetProductResponse
+public sealed record GetProductResponse
 {
-    [Required] public int Id { get; private init; }
-    [Required] public string Name { get; private init; } = string.Empty;
+    [Required] public required Guid Id { get; init; }
+    [Required] public required string Name { get; init; }
 
     public static GetProductResponse CreateFrom(ProductModel product) => new()
     {

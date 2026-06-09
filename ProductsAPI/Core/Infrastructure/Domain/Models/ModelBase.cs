@@ -2,11 +2,11 @@
 
 public abstract class ModelBase
 {
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 
     public override bool Equals(object? obj) =>
         obj is ModelBase model
         && model.Id == Id;
 
-    public override int GetHashCode() => Id;
+    public override int GetHashCode() => Id.GetHashCode();
 }
