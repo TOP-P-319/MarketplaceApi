@@ -4,5 +4,9 @@ namespace ProductsAPI.Modules.Products.Services;
 
 public interface IProductsService
 {
-    Task<ProductModel?> GetProduct(Guid id);
+    Task<ProductModel?> GetProductAsync(Guid id);
+    Task<IEnumerable<ProductModel>> GetAllProductsAsync();
+    Task RemoveProductAsync(Guid id);
+    Task AddProductAsync(ProductModel product);
+    Task UpdateProductAsync(ProductModel product);
 }

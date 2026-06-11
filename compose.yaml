@@ -1,7 +1,44 @@
-﻿services:
-  productsapi:
-    image: productsapi
+﻿name: marketplace-api-319
+services:
+  products-api:
+    container_name: products-api-319
+    image: products-api-319
     build:
       context: .
       dockerfile: ProductsAPI/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_CONNECTION: ${PRODUCTS_DB_CONNECTION}
+    ports:
+      - "5032:8080"
+    depends_on:
+      - products-migrations
+    restart: always
 
+  products-db:
+    container_name: products-db-319
+    image: postgres:18.4-alpine3.23
+    environment:
+      POSTGRES_DB: ${PRODUCTS_DB_NAME}
+      POSTGRES_USER: ${PRODUCTS_DB_USER}
+      POSTGRES_PASSWORD: ${PRODUCTS_DB_PASSWORD}
+    ports:
+      - "5033:5432"
+    volumes:
+      - products-data:/var/lib/postgresql
+    restart: always
+    
+  products-migrations:
+    container_name: products-migrations-319
+    image: products-migrations-319
+    build:
+      context: .
+      dockerfile: ProductsMigrations/Dockerfile
+    environment:
+      DB_CONNECTION: ${PRODUCTS_DB_CONNECTION}
+    depends_on:
+      - products-db
+    restart: on-failure
+  
+volumes:
+  products-data:
