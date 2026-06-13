@@ -17,17 +17,17 @@ public abstract class RepoBase<TModel, TEntity>(
     public async Task<TModel?> FindByIdAsync(Guid id)
     {
         var entity = await set.FindAsync(id);
-        return entity == null ? null : mapper.Map(entity);
+        return entity == null ? null : mapper.MapToModel(entity);
     }
 
     public async Task<IEnumerable<TModel>> FindAllAsync() =>
         await set.AsNoTracking()
-            .Select(entity => mapper.Map(entity))
+            .Select(entity => mapper.MapToModel(entity))
             .ToArrayAsync();
 
     public async Task AddAsync(TModel model)
     {
-        var entity = mapper.Map(model);
+        var entity = mapper.MapToEntity(model);
         await set.AddAsync(entity);
         await ctx.SaveChangesAsync();
     }
@@ -35,7 +35,7 @@ public abstract class RepoBase<TModel, TEntity>(
     public async Task UpdateAsync(TModel model)
     {
         var entity = await set.FindAsync(model.Id) ?? throw new KeyNotFoundException();
-        entity.Update(mapper.Map(model));
+        entity.Update(mapper.MapToEntity(model));
         await ctx.SaveChangesAsync();
     }
 
@@ -49,19 +49,12 @@ public abstract class RepoBase<TModel, TEntity>(
     protected async Task<TModel?> FindByAsync(Expression<Func<TEntity, bool>> predicate)
     {
         var entity = await set.AsNoTracking().FirstOrDefaultAsync(predicate);
-        return entity == null ? null : mapper.Map(entity);
+        return entity == null ? null : mapper.MapToModel(entity);
     }
     
     protected async Task<IEnumerable<TModel>> FindAllByAsync(Expression<Func<TEntity, bool>> predicate) =>
         await set.AsNoTracking()
             .Where(predicate)
-            .Select(entity => mapper.Map(entity))
+            .Select(entity => mapper.MapToModel(entity))
             .ToArrayAsync();
-    
-    protected async Task PartialUpdateByIdAsync(Guid id, Action<TEntity> update)
-    {
-        var entity = await set.FindAsync(id) ?? throw new KeyNotFoundException();
-        update(entity);
-        await ctx.SaveChangesAsync();
-    }
 }

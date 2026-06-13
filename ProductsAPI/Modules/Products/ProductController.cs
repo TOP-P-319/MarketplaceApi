@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductsAPI.Core.Constants;
 using ProductsAPI.Modules.Products.Dtos.Requests;
 using ProductsAPI.Modules.Products.Dtos.Responses;
 using ProductsAPI.Modules.Products.Services;
@@ -11,34 +12,37 @@ public sealed class ProductController(
     IProductsService productsService
 ) : ControllerBase
 {
-    [HttpPost]
-    public async Task<ActionResult> CreateProductAsync([FromBody] CreateProductRequest request)
+    [HttpPost(Name = Routes.Product.Create)]
+    public async Task<ActionResult<CreateProductResponse>> CreateProductAsync([FromBody] CreateProductRequest request)
     {
-        var product = request.ConvertToProductModel();
-        await productsService.AddProductAsync(product);
-        return Created();
-    }
-    
-    [HttpGet]
-    [Route("{id:guid}")]
-    public async Task<ActionResult<GetProductResponse>> GetProductAsync([FromRoute] Guid id)
-    {
-        var product = await productsService.GetProductAsync(id);
-        if (product == null) return NotFound();
-        return Ok(GetProductResponse.CreateFrom(product));
-    }
-    
-    [HttpPut]
-    [Route("{id:guid}")]
-    public async Task<ActionResult> UpdateProductAsync([FromRoute] Guid id, [FromBody] UpdateProductRequest request)
-    {
-        var product = request.ConvertToProductModel(id);
-        await productsService.UpdateProductAsync(product);
-        return NoContent();
+        var response = await productsService.AddProductAsync(request);
+        return CreatedAtRoute(Routes.Product.Get, new { id = response.Id }, response);
     }
 
-    [HttpDelete]
-    [Route("{id:guid}")]
+    [HttpGet("{id:guid}", Name = Routes.Product.Get)]
+    public async Task<ActionResult<GetProductResponse>> GetProductAsync([FromRoute] Guid id)
+    {
+        var response = await productsService.GetProductAsync(id);
+        if (response == null) return NotFound();
+        return Ok(response);
+    }
+
+    [HttpPut("{id:guid}", Name = Routes.Product.Update)]
+    public async Task<ActionResult<UpdateProductResponse>> UpdateProductAsync([FromRoute] Guid id,
+        [FromBody] UpdateProductRequest request)
+    {
+        try
+        {
+            var response = await productsService.UpdateProductAsync(id, request);
+            return Ok(response);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
+    [HttpDelete("{id:guid}", Name = Routes.Product.Delete)]
     public async Task<ActionResult> DeleteProductAsync([FromRoute] Guid id)
     {
         try
