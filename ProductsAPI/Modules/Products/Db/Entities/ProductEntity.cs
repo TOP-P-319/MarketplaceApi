@@ -4,10 +4,11 @@ namespace ProductsAPI.Modules.Products.Db.Entities;
 
 public sealed class ProductEntity : EntityBase<ProductEntity>
 {
-    public string Name { get; set; }
-    
+    public string Name { get; set; } = string.Empty;
+
     public override void Update(ProductEntity other)
     {
+        base.Update(other);
         Name = other.Name;
     }
 }

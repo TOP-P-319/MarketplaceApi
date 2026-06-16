@@ -15,15 +15,17 @@ public static class EntityTypeBuilderEx
 
         entity.Property(e => e.Id)
             .HasColumnName("id")
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedNever();
 
         entity.Property(e => e.CreatedAt)
             .HasColumnName("created_at")
-            .ValueGeneratedOnAdd();
+            .IsRequired()
+            .ValueGeneratedNever();
 
         entity.Property(e => e.UpdatedAt)
             .HasColumnName("updated_at")
-            .ValueGeneratedOnAddOrUpdate();
+            .IsRequired()
+            .ValueGeneratedNever();
 
         return entity;
     }

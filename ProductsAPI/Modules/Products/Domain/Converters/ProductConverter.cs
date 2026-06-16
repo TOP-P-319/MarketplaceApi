@@ -33,7 +33,9 @@ public static class ProductConverter
 
     public static ProductModel ConvertToProductModel(this CreateProductRequest request) => new()
     {
-        Name = request.Name
+        Name = request.Name,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
     };
 
     public static ProductModel ConvertToProductModel(this UpdateProductRequest request, Guid id) =>

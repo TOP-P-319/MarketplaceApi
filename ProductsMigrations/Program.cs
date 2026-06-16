@@ -26,7 +26,6 @@ public class Program
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(connection)
             .Options;
-        logger.LogInformation("Connecting to database...");
         await using var ctx = new AppDbContext(options);
         await ctx.Database.MigrateAsync();
         logger.LogInformation("Migration succeeded.");

@@ -1,7 +1,8 @@
+using dotenv.net;
 using Microsoft.EntityFrameworkCore;
-using ProductsAPI.Core;
 using ProductsAPI.Core.Constants;
 using ProductsAPI.Core.Infrastructure.Db.Mappers;
+using ProductsAPI.Core.Utils.Config;
 using ProductsAPI.Modules.App.Db;
 using ProductsAPI.Modules.Products.Db.Entities;
 using ProductsAPI.Modules.Products.Db.Mappers;
@@ -16,6 +17,12 @@ public static class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        if (builder.Environment.IsLocal())
+        {
+            DotEnv.Load();
+            builder.Configuration.AddEnvironmentVariables();
+        }
 
         #region Services
 
@@ -56,7 +63,7 @@ public static class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || app.Environment.IsLocal())
         {
             app.MapOpenApi();
             app.UseSwagger();
