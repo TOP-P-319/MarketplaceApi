@@ -2,13 +2,13 @@
 
 namespace ProductsAPI.Modules.Products.Domain.Models;
 
-public sealed class ProductModel : ModelBase
+public sealed record ProductModel : ModelBase
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
 
-    public override bool Equals(object? obj) =>
-        obj is ProductModel model
-        && base.Equals(model);
-
-    public override int GetHashCode() => base.GetHashCode();
+    public ProductModel WithUpdatedName(string name) =>
+        Touch<ProductModel>() with
+        {
+            Name = name
+        };
 }

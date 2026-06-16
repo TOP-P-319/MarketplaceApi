@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using ProductsAPI.Core.Constants;
+using ProductsAPI.Core.Utils.Db;
 using ProductsAPI.Modules.Products.Db.Entities;
 
 namespace ProductsAPI.Modules.App.Db;
@@ -14,14 +15,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<ProductEntity>(entity =>
         {
-            entity.ToTable("products");
-            entity.HasKey(e => e.Id);
+            entity.ToTableWithDefaultProperties("products");
 
-            entity.Property(e => e.Id)
-                .HasColumnName("id")
-                .HasDefaultValueSql("gen_random_uuid()")
-                .ValueGeneratedOnAdd();
-            
             entity.Property(e => e.Name)
                 .HasColumnName("name")
                 .HasMaxLength(Limits.Product.Name.MaxLength)

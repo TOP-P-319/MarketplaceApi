@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductsAPI.Core.Constants;
 using ProductsAPI.Modules.Products.Dtos.Responses;
 using ProductsAPI.Modules.Products.Services;
 
@@ -10,11 +11,10 @@ public sealed class ProductsController(
     IProductsService productsService
 ) : ControllerBase
 {
-    [HttpGet]
-    [Route("all")]
+    [HttpGet("all", Name = Routes.Products.GetAll)]
     public async Task<ActionResult<IEnumerable<GetProductResponse>>> GetAllProductsAsync()
     {
-        var products = await productsService.GetAllProductsAsync();
-        return Ok(products.Select(GetProductResponse.CreateFrom));
+        var response = await productsService.GetAllProductsAsync();
+        return Ok(response);
     }
 }
