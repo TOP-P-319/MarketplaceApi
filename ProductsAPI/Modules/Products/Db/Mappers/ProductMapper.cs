@@ -10,12 +10,16 @@ public sealed class ProductMapper : MapperBase<ProductModel, ProductEntity>
     {
         var entity = base.MapToEntity(model);
         entity.Name = model.Name;
+        entity.PreviewUrl = model.PreviewUrl?.ToString();
         return entity;
     }
 
     public override ProductModel MapToModel(ProductEntity entity) =>
         base.MapToModel(entity) with
         {
-            Name = entity.Name
+            Name = entity.Name,
+            PreviewUrl = Uri.TryCreate(entity.PreviewUrl, UriKind.Absolute, out var previewUrl)
+                ? previewUrl
+                : null
         };
 }
