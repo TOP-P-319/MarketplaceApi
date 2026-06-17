@@ -21,6 +21,9 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
                 .HasColumnName("name")
                 .HasMaxLength(Limits.Product.Name.MaxLength)
                 .IsRequired();
+
+            entity.Property(e => e.PreviewUrl)
+                .HasColumnName("preview_url");
         });
     }
 }
