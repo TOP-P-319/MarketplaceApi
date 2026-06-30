@@ -1,9 +1,19 @@
+using System.Security.Claims;
+using System.Text;
 using dotenv.net;
-using ProductsAPI.Products;
-using Shared.Products;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Npgsql;
+using Shared.Constants;
+using Shared.Infrastructure;
+using Shared.Users;
 using Shared.Utils;
+using UsersAPI.Auth;
 
-namespace ProductsAPI;
+namespace UsersAPI;
 
 public static class Program
 {
@@ -26,9 +36,11 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerWithSecurityGen();
 
-        builder.Services.AddScoped<ProductsService>();
-        builder.Services.AddScoped<ProductsRepo>();
-        builder.Services.AddSingleton<ProductMapper>();
+        builder.Services.AddScoped<UsersRepo>();
+        builder.Services.AddSingleton<UserMapper>();
+        builder.Services.AddScoped<AuthService>();
+
+        builder.Services.AddSingleton<PasswordHasher<UserModel>>();
 
         var app = builder.Build();
 

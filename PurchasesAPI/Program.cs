@@ -1,9 +1,15 @@
 using dotenv.net;
-using ProductsAPI.Products;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using PurchasesAPI.Purchases;
+using Shared.Constants;
+using Shared.Infrastructure;
 using Shared.Products;
+using Shared.Purchases;
+using Shared.Users;
 using Shared.Utils;
 
-namespace ProductsAPI;
+namespace PurchasesAPI;
 
 public static class Program
 {
@@ -26,9 +32,17 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerWithSecurityGen();
 
-        builder.Services.AddScoped<ProductsService>();
+        builder.Services.AddScoped<PurchaseService>();
+        
+        builder.Services.AddScoped<TransactionBuilder>();
         builder.Services.AddScoped<ProductsRepo>();
+        builder.Services.AddScoped<PurchasesRepo>();
+        builder.Services.AddScoped<UsersRepo>();
+        
+        
         builder.Services.AddSingleton<ProductMapper>();
+        builder.Services.AddSingleton<PurchaseMapper>();
+        builder.Services.AddSingleton<UserMapper>();
 
         var app = builder.Build();
 

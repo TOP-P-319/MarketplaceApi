@@ -1,0 +1,29 @@
+﻿using System.Numerics;
+using Shared.Infrastructure;
+
+namespace Shared.Users;
+
+public sealed record UserModel : Model
+{
+    public string Name { get; init; } = string.Empty;
+    public string PhoneNumber { get; init; } = string.Empty;
+    public string PasswordHash { get; init; } = string.Empty;
+    public BigInteger Balance { get; init; }
+    public UserRoles Role { get; init; }
+    public UserStatus Status { get; init; }
+
+    public UserModel WithDecreasedBalance(BigInteger dec) => Touch<UserModel>() with
+    {
+        Balance = Balance - dec
+    };
+
+    public UserModel WithIncreasedBalance(BigInteger inc) => Touch<UserModel>() with
+    {
+        Balance = Balance + inc
+    };
+
+    public UserModel WithPasswordHash(string passwordHash) => this with
+    {
+        PasswordHash = passwordHash
+    };
+}
