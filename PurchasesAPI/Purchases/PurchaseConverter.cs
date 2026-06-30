@@ -18,4 +18,14 @@ public static class PurchaseConverter
             ProductName = purchase.ProductName,
             PricePaid = purchase.PricePaid.ToString()
         };
+
+    public static GetPurchaseHistoryResponse ConvertToGetPurchaseHistoryResponse(this PurchaseModel purchase) =>
+        new()
+        {
+            Id = purchase.Id,
+            ProductId = purchase.ProductId,
+            ProductName = purchase.ProductName,
+            PricePaid = purchase.PricePaid.ToString(),
+            CreatedAt = purchase.CreatedAt,
+        };
 }

@@ -13,6 +13,7 @@ public sealed record ProductModel : Model
     public FrozenDictionary<string, string> Features { get; init; } = FrozenDictionary<string, string>.Empty;
     public BigInteger Price { get; init; }
     public int Amount { get; init; }
+    public ProductStatuses Status { get; init; } = ProductStatuses.Published;
 
     public ProductModel WithUpdatedName(string name) => Touch<ProductModel>() with
     {
@@ -24,5 +25,14 @@ public sealed record ProductModel : Model
         Amount = Amount - 1
     };
 
-    // TODO: add With<Smth> methods
+    public ProductModel WithStatus(ProductStatuses status) => Touch<ProductModel>() with
+    {
+        Status = status
+    };
+
+    public ProductModel WithPriceAndAmount(BigInteger price, int amount) => Touch<ProductModel>() with
+    {
+        Price = price,
+        Amount = amount
+    };
 }

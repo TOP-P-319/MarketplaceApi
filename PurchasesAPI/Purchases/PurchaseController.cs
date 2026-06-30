@@ -45,4 +45,26 @@ public sealed class PurchaseController(PurchaseService purchaseService) : Contro
         if (response == null) return NotFound();
         return Ok(response);
     }
+
+    [HttpGet("mine", Name = Routes.Purchase.GetMine)]
+    [Authorize(Roles = UserRole.Buyer)]
+    public async Task<ActionResult<IEnumerable<GetPurchaseHistoryResponse>>> GetMyPurchasesAsync()
+    {
+        if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var buyerId))
+            return Unauthorized();
+
+        var response = await purchaseService.GetBuyerHistoryAsync(buyerId);
+        return Ok(response);
+    }
+
+    [HttpGet("sales", Name = Routes.Purchase.GetSales)]
+    [Authorize(Roles = UserRole.Seller)]
+    public async Task<ActionResult<IEnumerable<GetPurchaseHistoryResponse>>> GetMySalesAsync()
+    {
+        if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var sellerId))
+            return Unauthorized();
+
+        var response = await purchaseService.GetSellerSalesAsync(sellerId);
+        return Ok(response);
+    }
 }

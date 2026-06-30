@@ -12,5 +12,7 @@ public class Program
         await using var ctx = new AppDbContextFactory().CreateDbContext(args);
         await ctx.Database.MigrateAsync();
         logger.LogInformation("Migration succeeded.");
+        await Seeder.SeedAsync(ctx);
+        logger.LogInformation("Seeding succeeded.");
     }
 }

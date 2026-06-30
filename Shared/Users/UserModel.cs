@@ -9,8 +9,8 @@ public sealed record UserModel : Model
     public string PhoneNumber { get; init; } = string.Empty;
     public string PasswordHash { get; init; } = string.Empty;
     public BigInteger Balance { get; init; }
-    public UserRoles Role { get; init; }
-    public UserStatus Status { get; init; }
+    public UserRoles Role { get; init; } = UserRoles.Unknown;
+    public UserStatuses Status { get; init; } = UserStatuses.Active;
 
     public UserModel WithDecreasedBalance(BigInteger dec) => Touch<UserModel>() with
     {

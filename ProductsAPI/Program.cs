@@ -1,6 +1,10 @@
 using dotenv.net;
 using ProductsAPI.Products;
+using ProductsAPI.Reviews;
 using Shared.Products;
+using Shared.Requests;
+using Shared.Reviews;
+using Shared.Users;
 using Shared.Utils;
 
 namespace ProductsAPI;
@@ -28,7 +32,19 @@ public static class Program
 
         builder.Services.AddScoped<ProductsService>();
         builder.Services.AddScoped<ProductsRepo>();
+        builder.Services.AddScoped<ProductCreateRequestsRepo>();
+        builder.Services.AddScoped<ProductUpdateRequestsRepo>();
         builder.Services.AddSingleton<ProductMapper>();
+        builder.Services.AddSingleton<ProductCreateRequestMapper>();
+        builder.Services.AddSingleton<ProductUpdateRequestMapper>();
+
+        builder.Services.AddScoped<ReviewsService>();
+        builder.Services.AddScoped<ReviewsRepo>();
+        builder.Services.AddScoped<ReviewCreateRequestsRepo>();
+        builder.Services.AddSingleton<ReviewMapper>();
+        builder.Services.AddSingleton<ReviewCreateRequestMapper>();
+        builder.Services.AddScoped<UsersRepo>();
+        builder.Services.AddSingleton<UserMapper>();
 
         var app = builder.Build();
 

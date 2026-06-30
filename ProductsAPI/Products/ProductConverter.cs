@@ -1,6 +1,7 @@
 ﻿using ProductsAPI.Products.Requests;
 using ProductsAPI.Products.Responses;
 using Shared.Products;
+using Shared.Requests;
 
 namespace ProductsAPI.Products;
 
@@ -8,10 +9,11 @@ public static class ProductConverter
 {
     extension(ProductModel product)
     {
-        public GetProductResponse ConvertToGetProductResponse() =>
+        public GetProductResponse ConvertToGetProductResponse(string sellerName, double rating, int reviewsCount) =>
             new()
             {
                 SellerId = product.SellerId,
+                SellerName = sellerName,
                 Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
@@ -19,11 +21,13 @@ public static class ProductConverter
                 Price = product.Price.ToString(),
                 Amount = product.Amount,
                 Features = product.Features,
+                Rating = rating,
+                ReviewsCount = reviewsCount,
                 CreatedAt = product.CreatedAt,
                 UpdatedAt = product.UpdatedAt,
             };
 
-        public GetProductPreviewResponse ConvertToGetProductPreviewResponse() =>
+        public GetProductPreviewResponse ConvertToGetProductPreviewResponse(double rating, int reviewsCount) =>
             new()
             {
                 SellerId = product.SellerId,
@@ -32,32 +36,79 @@ public static class ProductConverter
                 PreviewUrl = product.ImageUrls.FirstOrDefault()?.ToString(),
                 Price = product.Price.ToString(),
                 Amount = product.Amount,
+                Rating = rating,
+                ReviewsCount = reviewsCount,
             };
 
-        public CreateProductResponse ConvertToCreateProductResponse() =>
+        public GetMyProductResponse ConvertToGetMyProductResponse() =>
             new()
             {
                 Id = product.Id,
-                CreatedAt = product.CreatedAt,
+                Name = product.Name,
+                PreviewUrl = product.ImageUrls.FirstOrDefault()?.ToString(),
+                Price = product.Price.ToString(),
+                Amount = product.Amount,
+                Status = product.Status.ToString(),
+                Editable = true,
             };
 
-        public UpdateProductResponse ConvertToUpdateProductResponse() =>
+        public ProductCreateRequestModel ConvertToProductCreateRequest() =>
             new()
             {
-                UpdatedAt = product.UpdatedAt,
+                SellerId = product.SellerId,
+                Name = product.Name,
+                Description = product.Description,
+                ImageUrls = product.ImageUrls,
+                Price = product.Price,
+                Amount = product.Amount,
+                Features = product.Features,
+                Status = RequestStatuses.Pending,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+            };
+
+        public ProductUpdateRequestModel ConvertToProductUpdateRequest() =>
+            new()
+            {
+                ProductId = product.Id,
+                SellerId = product.SellerId,
+                Name = product.Name,
+                Description = product.Description,
+                ImageUrls = product.ImageUrls,
+                Features = product.Features,
+                Status = RequestStatuses.Pending,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
             };
     }
 
-    public static ProductModel ConvertToProductModel(this CreateProductRequest request) => new()
+    extension(ProductCreateRequestModel request)
+    {
+        public GetMyProductResponse ConvertToGetMyProductResponse() =>
+            new()
+            {
+                Id = request.Id,
+                Name = request.Name,
+                PreviewUrl = request.ImageUrls.FirstOrDefault()?.ToString(),
+                Price = request.Price.ToString(),
+                Amount = request.Amount,
+                Status = "OnModeration",
+                Editable = false,
+            };
+    }
+
+    public static ProductModel ConvertToProductModel(this CreateProductRequest request, Guid sellerId) => new()
     {
         Name = request.Name,
+        SellerId = sellerId,
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow
     };
 
-    public static ProductModel ConvertToProductModel(this UpdateProductRequest request, Guid id) =>
+    public static ProductModel ConvertToProductModel(this UpdateProductRequest request, Guid id, Guid sellerId) =>
         new ProductModel
         {
-            Id = id
+            Id = id,
+            SellerId = sellerId,
         }.WithUpdatedName(request.Name);
 }

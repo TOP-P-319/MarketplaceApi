@@ -9,6 +9,7 @@ public sealed class PurchaseMapper : Mapper<PurchaseModel, PurchaseEntity>
         var entity = base.MapToEntity(model);
         entity.BuyerId = model.BuyerId;
         entity.SellerId = model.SellerId;
+        entity.ProductId = model.ProductId;
         entity.ProductName = model.ProductName;
         entity.PricePaid = model.PricePaid;
         return entity;
@@ -19,6 +20,7 @@ public sealed class PurchaseMapper : Mapper<PurchaseModel, PurchaseEntity>
         {
             BuyerId = entity.BuyerId,
             SellerId = entity.SellerId,
+            ProductId = entity.ProductId,
             ProductName = entity.ProductName,
             PricePaid = entity.PricePaid
         };

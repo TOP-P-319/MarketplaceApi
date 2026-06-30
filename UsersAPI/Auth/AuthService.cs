@@ -4,26 +4,32 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Requests;
 using Shared.Users;
 
 namespace UsersAPI.Auth;
 
-public sealed class AuthService(UsersRepo usersRepo, PasswordHasher<UserModel> hasher, IOptions<JwtSettings> jwtOptions)
+public sealed class AuthService(
+    UsersRepo usersRepo,
+    SellerRegisterRequestsRepo sellerRegisterRequestsRepo,
+    PasswordHasher<UserModel> hasher,
+    IOptions<JwtSettings> jwtOptions)
 {
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
-    public async Task<List<Claim>> RegisterUser(RegisterRequest request, UserRoles role)
+    public async Task<List<Claim>> RegisterBuyerAsync(RegisterRequest request)
     {
-        var user = new UserModel
-        {
-            Name = request.Name,
-            PhoneNumber = request.PhoneNumber,
-            Role = role,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-        };
+        var user = request.ConvertToUser(UserRoles.Buyer);
         user = user.WithPasswordHash(hasher.HashPassword(user, request.Password));
-        await usersRepo.AddAsync(user);
+        try
+        {
+            await usersRepo.AddAsync(user);
+        }
+        catch
+        {
+            throw new InvalidOperationException("Phone number is already in use");
+        }
+
         return
         [
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -31,10 +37,22 @@ public sealed class AuthService(UsersRepo usersRepo, PasswordHasher<UserModel> h
         ];
     }
 
+    public async Task CreateSellerRegisterRequestAsync(RegisterRequest request)
+    {
+        if (await usersRepo.FindByPhoneNumber(request.PhoneNumber) != null)
+            throw new InvalidOperationException("Phone number is already in use");
+
+        var user = request.ConvertToUser(UserRoles.Seller);
+        user = user.WithPasswordHash(hasher.HashPassword(user, request.Password));
+        var sellerRegisterRequest = user.ConvertToSellerRegisterRequest();
+        await sellerRegisterRequestsRepo.AddAsync(sellerRegisterRequest);
+    }
+
+
     public async Task<List<Claim>?> ValidateCredentials(LoginRequest request)
     {
         var user = await usersRepo.FindByPhoneNumber(request.PhoneNumber);
-        if (user == null) return null;
+        if (user is not { Status: UserStatuses.Active }) return null;
 
         var verification = hasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
         if (verification == PasswordVerificationResult.Failed) return null;
@@ -46,7 +64,7 @@ public sealed class AuthService(UsersRepo usersRepo, PasswordHasher<UserModel> h
         ];
     }
 
-    public LoginResponse GenerateJwtToken(List<Claim> claims)
+    public AuthResponse GenerateJwtToken(List<Claim> claims)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -58,6 +76,6 @@ public sealed class AuthService(UsersRepo usersRepo, PasswordHasher<UserModel> h
             signingCredentials: credentials
         );
 
-        return new LoginResponse { Token = new JwtSecurityTokenHandler().WriteToken(token) };
+        return new AuthResponse { Token = new JwtSecurityTokenHandler().WriteToken(token) };
     }
 }

@@ -31,6 +31,10 @@ public sealed class ProductEntity : Entity<ProductEntity>
     [Column("price")] [Required] public BigInteger Price { get; set; }
     [Column("amount")] [Required] public int Amount { get; set; }
 
+    [Column("status", TypeName = "text")]
+    [Required]
+    public ProductStatuses Status { get; set; }
+
     public override void Update(ProductEntity other)
     {
         base.Update(other);
@@ -41,5 +45,6 @@ public sealed class ProductEntity : Entity<ProductEntity>
         Features = other.Features;
         Price = other.Price;
         Amount = other.Amount;
+        Status = other.Status;
     }
 }

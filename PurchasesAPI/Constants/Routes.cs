@@ -6,5 +6,7 @@ public static class Routes
     {
         public const string Get = "GetPurchase";
         public const string Create = "CreatePurchase";
+        public const string GetMine = "GetMyPurchases";
+        public const string GetSales = "GetMySales";
     }
 }

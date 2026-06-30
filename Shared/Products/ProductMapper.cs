@@ -16,6 +16,7 @@ public sealed class ProductMapper : Mapper<ProductModel, ProductEntity>
         entity.Amount = model.Amount;
         entity.SellerId = model.SellerId;
         entity.Price = model.Price;
+        entity.Status = model.Status;
         return entity;
     }
 
@@ -28,6 +29,7 @@ public sealed class ProductMapper : Mapper<ProductModel, ProductEntity>
             Features = entity.Features.ToFrozenDictionary(),
             Amount = entity.Amount,
             SellerId = entity.SellerId,
-            Price = entity.Price
+            Price = entity.Price,
+            Status = entity.Status
         };
 }

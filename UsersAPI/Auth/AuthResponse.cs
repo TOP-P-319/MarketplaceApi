@@ -1,6 +1,6 @@
 ﻿namespace UsersAPI.Auth;
 
-public sealed record LoginResponse
+public sealed record AuthResponse
 {
     public required string Token { get; init; }
 }

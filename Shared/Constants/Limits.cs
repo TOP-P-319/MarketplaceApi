@@ -14,4 +14,12 @@ public static class Limits
             public const int MaxLength = 1023;
         }
     }
+
+    public static class Review
+    {
+        public static class Text
+        {
+            public const int MaxLength = 1023;
+        }
+    }
 }

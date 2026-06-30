@@ -36,6 +36,7 @@ public sealed class PurchaseService(
             {
                 BuyerId = buyer.Id,
                 SellerId = seller.Id,
+                ProductId = product.Id,
                 ProductName = product.Name,
                 PricePaid = product.Price,
                 CreatedAt = DateTime.UtcNow,
@@ -62,5 +63,17 @@ public sealed class PurchaseService(
     {
         var purchase = await purchasesRepo.FindByIdAsync(id);
         return purchase?.ConvertToGetPurchaseResponse();
+    }
+
+    public async Task<IEnumerable<GetPurchaseHistoryResponse>> GetBuyerHistoryAsync(Guid buyerId)
+    {
+        var purchases = await purchasesRepo.FindAllByBuyerAsync(buyerId);
+        return purchases.Select(PurchaseConverter.ConvertToGetPurchaseHistoryResponse);
+    }
+
+    public async Task<IEnumerable<GetPurchaseHistoryResponse>> GetSellerSalesAsync(Guid sellerId)
+    {
+        var sales = await purchasesRepo.FindAllBySellerAsync(sellerId);
+        return sales.Select(PurchaseConverter.ConvertToGetPurchaseHistoryResponse);
     }
 }

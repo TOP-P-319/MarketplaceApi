@@ -7,6 +7,7 @@ public sealed record PurchaseModel : Model
 {
     public Guid BuyerId { get; init; }
     public Guid SellerId { get; init; }
+    public Guid ProductId { get; init; }
     public string ProductName { get; init; } = string.Empty;
     public BigInteger PricePaid { get; init; }
 }

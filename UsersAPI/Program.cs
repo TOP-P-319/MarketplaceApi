@@ -9,6 +9,7 @@ using Microsoft.OpenApi;
 using Npgsql;
 using Shared.Constants;
 using Shared.Infrastructure;
+using Shared.Requests;
 using Shared.Users;
 using Shared.Utils;
 using UsersAPI.Auth;
@@ -38,6 +39,9 @@ public static class Program
 
         builder.Services.AddScoped<UsersRepo>();
         builder.Services.AddSingleton<UserMapper>();
+        builder.Services.AddScoped<SellerRegisterRequestsRepo>();
+        builder.Services.AddSingleton<SellerRegisterRequestMapper>();
+        
         builder.Services.AddScoped<AuthService>();
 
         builder.Services.AddSingleton<PasswordHasher<UserModel>>();

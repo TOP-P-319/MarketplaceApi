@@ -15,6 +15,8 @@ public sealed class PurchaseEntity : Entity<PurchaseEntity>
     [Column("seller_id")] [Required] public Guid SellerId { get; set; }
     [ForeignKey(nameof(SellerId))] public UserEntity? Seller { get; set; }
 
+    [Column("product_id")] [Required] public Guid ProductId { get; set; }
+
     [Column("product_name")]
     [StringLength(Limits.Product.Name.MaxLength)]
     [Required]

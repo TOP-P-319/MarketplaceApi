@@ -1,8 +1,7 @@
 ﻿namespace Shared.Users;
 
-public enum UserStatus
+public enum UserStatuses
 {
-    Created,
     Active,
     Banned,
 }
