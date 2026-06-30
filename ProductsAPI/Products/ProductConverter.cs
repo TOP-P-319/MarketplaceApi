@@ -1,7 +1,10 @@
-﻿using ProductsAPI.Products.Requests;
+﻿using System.Collections.Frozen;
+using System.Numerics;
+using ProductsAPI.Products.Requests;
 using ProductsAPI.Products.Responses;
 using Shared.Products;
 using Shared.Requests;
+using Shared.Utils;
 
 namespace ProductsAPI.Products;
 
@@ -99,16 +102,29 @@ public static class ProductConverter
 
     public static ProductModel ConvertToProductModel(this CreateProductRequest request, Guid sellerId) => new()
     {
-        Name = request.Name,
         SellerId = sellerId,
+        Name = request.Name,
+        Description = request.Description,
+        ImageUrls = request.ToUris(),
+        Price = BigInteger.Parse(request.Price),
+        Amount = request.Amount,
+        Features = request.Features.ToFrozenDictionary(),
         CreatedAt = DateTime.UtcNow,
-        UpdatedAt = DateTime.UtcNow
+        UpdatedAt = DateTime.UtcNow,
     };
 
-    public static ProductModel ConvertToProductModel(this UpdateProductRequest request, Guid id, Guid sellerId) =>
-        new ProductModel
-        {
-            Id = id,
-            SellerId = sellerId,
-        }.WithUpdatedName(request.Name);
+    public static ProductModel ConvertToProductModel(this UpdateProductRequest request, Guid id, Guid sellerId) => new()
+    {
+        Id = id,
+        SellerId = sellerId,
+        Name = request.Name,
+        Description = request.Description,
+        ImageUrls = request.ImageUrls.Select(url => url.ToUri()).Where(uri => uri is not null).Select(uri => uri!).ToArray(),
+        Features = request.Features.ToFrozenDictionary(),
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow,
+    };
+
+    private static Uri[] ToUris(this CreateProductRequest request) =>
+        request.ImageUrls.Select(url => url.ToUri()).Where(uri => uri is not null).Select(uri => uri!).ToArray();
 }
